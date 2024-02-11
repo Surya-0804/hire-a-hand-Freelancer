@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import MyContext from './myContext';
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
+// MyState.jsx
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import MyContext from './MyContext';
+import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { fireDb } from '../../firebase/FirebaseConfig';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 function MyState(props) {
     const [mode, setMode] = useState('light'); // Whether dark mode is enabled or not
@@ -9,8 +11,7 @@ function MyState(props) {
         if (mode === 'light') {
             setMode('dark');
             document.body.style.backgroundColor = 'rgb(17, 24, 39)';
-        }
-        else {
+        } else {
             setMode('light');
             document.body.style.backgroundColor = 'white';
         }
@@ -51,33 +52,75 @@ function MyState(props) {
     }
 
     useEffect(() => {
-        getAllBlogs();
+        const unsubscribe = getAllBlogs(); // Call the function and store the unsubscribe function
+    
+        // Cleanup function to unsubscribe when the component unmounts
+        return () => unsubscribe();
     }, []);
+    
 
     // Blog Delete Function 
     const deleteBlogs = async (id) => {
         try {
             await deleteDoc(doc(fireDb, "blogPost", id));
-            getAllBlogs()
-            toast.success("Blogs deleted successfully")
+            getAllBlogs();
+            // Assuming you have 'toast' imported for displaying messages
+            // toast.success("Blogs deleted successfully");
         } catch (error) {
             console.log(error)
         }
     }
+
+    // Function to get the current user
+    const getCurrentUser = () => {
+        const auth = getAuth();
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+        });
+
+        return currentUser;
+    };
+    const fetchBlogData = async () => {
+        try {
+            const q = query(
+                collection(fireDb, "blogPost"),
+                orderBy('time')
+            );
+            const querySnapshot = await getDocs(q);
+
+            const blogArray = querySnapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+
+            return blogArray;
+        } catch (error) {
+            console.error('Error fetching blog data:', error);
+            throw error; // Propagate the error to the caller
+        }
+    };
+
+    const contextValue = {
+        mode,
+        toggleMode,
+        searchkey,
+        setSearchkey,
+        loading,
+        setloading,
+        getAllBlog,
+        setAllBlog: setGetAllBlog,
+        deleteBlogs,
+        getCurrentUser,
+        fetchBlogData,
+    };
+
     return (
-        <MyContext.Provider value={{
-            mode,
-            toggleMode,
-            searchkey,
-            setSearchkey,
-            loading,
-            setloading,
-            getAllBlog,
-            deleteBlogs
-        }}>
+        <MyContext.Provider value={contextValue}>
             {props.children}
         </MyContext.Provider>
     )
 }
 
-export default MyState
+export default MyState;

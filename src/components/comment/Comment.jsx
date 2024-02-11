@@ -1,6 +1,6 @@
 import { Button } from '@material-tailwind/react'
 import React, { useContext } from 'react'
-import myContext from '../../context/data/myContext';
+import myContext from '../../context/data/MyContext';
 
 function Comment({ addComment, commentText, setcommentText, allComment, fullName, setFullName }) {
   const context = useContext(myContext);

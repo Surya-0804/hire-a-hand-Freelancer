@@ -1,6 +1,6 @@
 import { Typography } from '@material-tailwind/react'
 import React, { useContext } from 'react'
-import myContext from '../../context/data/myContext';
+import myContext from '../../context/data/MyContext';
 
 function HeroSection() {
     const context = useContext(myContext);

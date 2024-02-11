@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";  // Update the import
+import { getAuth, onAuthStateChanged } from "firebase/auth"; 
 import { getStorage } from "firebase/storage";
 
 
@@ -26,4 +26,23 @@ const fireDb=getFirestore(app);
 const auth=getAuth(app);
 const storage=getStorage(app);
 
+onAuthStateChanged(auth, (user) => {
+  console.log('Auth state changed:', user);
+
+  // You can handle authentication state changes here
+  // For example, you might update your application state, navigate to different pages, etc.
+
+  // Check if the user is authenticated
+  if (user) {
+    // User is signed in
+    console.log('User is authenticated:', user);
+    // You can do further handling, such as updating your application state
+    // Example: setUserState(user);
+  } else {
+    // User is signed out
+    console.log('User is not authenticated');
+    // You can do further handling, such as updating your application state
+    // Example: setUserState(null);
+  }
+});
 export {fireDb,auth,storage};

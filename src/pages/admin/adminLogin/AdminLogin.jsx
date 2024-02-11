@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Card,
     CardHeader,
@@ -7,7 +7,7 @@ import {
     Button,
     Typography,
 } from "@material-tailwind/react";
-import myContext from "../../../context/data/myContext";
+import myContext from "../../../context/data/MyContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
@@ -17,25 +17,35 @@ export default function AdminLogin() {
     const context = useContext(myContext);
     const { mode } = context;
 
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const login = async () => {
-    if (!email || !password) {
-        return limitToLast.erro("All fields are required");
-    }
-    try {
-        const result = await signInWithEmailAndPassword(auth, email, password);
-        toast.success("Login successful");
-        localStorage.setItem("admin", JSON.stringify(result));
-        navigate("/dashboard");
-    } catch (error) {
-        console.error(error);
-        toast.error("Login failed");
-    }
-};
-
+        if (!email || !password) {
+            return toast.error("All fields are required");
+        }
+    
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, password);
+            toast.success("Login successful");
+            localStorage.setItem("admin", JSON.stringify(result));
+            
+            // Use the navigate function to redirect to the dashboard
+            navigate("/dashboard");
+        } catch (error) {
+            console.error(error);
+            toast.error("Login failed");
+        }
+    };
+    useEffect(() => {
+        // Check if there's an authenticated user and navigate to the dashboard
+        const authenticatedUser = JSON.parse(localStorage.getItem("admin"));
+        if (authenticatedUser) {
+            console.log("Redirecting to dashboard from AdminLogin useEffect");
+            navigate("/dashboard");
+        }
+    }, [navigate]);
 
     return (
         <div className="flex justify-center items-center h-screen">

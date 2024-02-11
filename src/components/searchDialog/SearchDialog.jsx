@@ -1,6 +1,6 @@
 import { Fragment, useContext, useState } from "react";
 import { Dialog, DialogBody, Input } from "@material-tailwind/react";
-import myContext from "../../context/data/myContext";
+import myContext from "../../context/data/MyContext";
 import { BiSearchAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 

@@ -1,6 +1,6 @@
 import { Button } from '@material-tailwind/react'
 import React, { useContext } from 'react'
-import myContext from '../../context/data/myContext';
+import myContext from '../../context/data/MyContext';
 import { useNavigate } from 'react-router';
 
 function BlogPostCard() {
@@ -71,7 +71,7 @@ function BlogPostCard() {
                               ? 'rgb(226, 232, 240)'
                               : ' rgb(30, 41, 59)'
                           }}>
-                            Photo booth fam kinfolk cold-pressed sriracha leggings jianbing microdosing tousled waistcoat.
+                            {item.description}
                           </p>
                         </div>
                       </div>

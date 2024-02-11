@@ -1,57 +1,95 @@
+import AuthContext from '../../../context/data/MyContext'; // Replace with the actual path
+
+// Rest of your imports
 import React, { useState, useContext } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { BsFillArrowLeftCircleFill } from "react-icons/bs"
-import myContext from '../../../context/data/myContext';
-import { Link, useNavigate } from "react-router-dom";
+import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
+import myContext from '../../../context/data/MyContext';
+import { Link, useNavigate } from 'react-router-dom';
 import {
-    Button,
-    Typography,
-} from "@material-tailwind/react";
+  Button,
+  Typography,
+} from '@material-tailwind/react';
 import { Timestamp, addDoc, collection } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { fireDb, storage } from '../../../firebase/FirebaseConfig';
+import { fireDb, storage,auth } from '../../../firebase/FirebaseConfig';
+import { onAuthStateChanged } from "firebase/auth";
 import toast from 'react-hot-toast';
 
 function CreateBlog() {
-    const context = useContext(myContext);
-    const { mode } = context;
+  const context = useContext(myContext);
+  const { mode } = context;
 
-    const [blogs, setBlogs] = useState({
-        title: "",
-        category: "",
-        content: "",
-        time: Timestamp.now(),
-    });
-    const [thumbnail, setthumbnail] = useState();
-    const navigate = useNavigate();
+  const [blogs, setBlogs] = useState({
+    title: '',
+    category: '',
+    content: '',
+    time: Timestamp.now(),
+  });
+  const [thumbnail, setThumbnail] = useState();
+  const navigate = useNavigate();
 
-    const addPost = async () => {
-        if (blogs.title === "" || blogs.category === "" || blogs.content === "" || !thumbnail) {
-            return toast.error('Please Fill All Fields');
-        }
-        uploadImage();
-    };
+  // Import the currentUser from AuthContext
+  const { currentUser } = useContext(AuthContext);
 
-    const uploadImage = async () => {
-        if (!thumbnail) return;
+  const addPost = async () => {
+    try {
+      // Wait for the authentication process to complete
+      await new Promise((resolve) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          if (user) {
+            resolve();
+          }
+        });
+        return unsubscribe;
+      });
+  
+      const user = auth.currentUser;
+  
+      if (!user || !user.uid) {
+        return toast.error('User not authenticated');
+      }
+  
+      if (
+        blogs.title === '' ||
+        blogs.category === '' ||
+        blogs.content === '' ||
+        !thumbnail
+      ) {
+        return toast.error('Please Fill All Fields');
+      }
+  
+      uploadImage(user.uid); // Pass the user ID to the uploadImage function
+    } catch (error) {
+      console.error(error);
+      toast.error('Error during authentication');
+    }
+  };
+  
+  
+    
+
+    const uploadImage = async (userId) => {
+      if (!thumbnail) return;
         const imageRef = ref(storage, `blogimage/${thumbnail.name}`);
         uploadBytes(imageRef, thumbnail).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
                 const productRef = collection(fireDb, "blogPost");
                 try {
-                    addDoc(productRef, {
-                        blogs,
-                        thumbnail: url,
-                        time: Timestamp.now(),
-                        date: new Date().toLocaleString(
-                            "en-US",
-                            {
-                                month: "short",
-                                day: "2-digit",
-                                year: "numeric",
-                            }
-                        )
-                    });
+                  addDoc(productRef, {
+                      blogs,
+                      thumbnail: url,
+                      time: Timestamp.now(),
+                      userId, // Add the user ID to the document
+                      date: new Date().toLocaleString(
+                          "en-US",
+                          {
+                              month: "short",
+                              day: "2-digit",
+                              year: "numeric",
+                          }
+                      )
+                  });
                     navigate('/dashboard');
                     toast.success('Post Added Successfully');
                 } catch (error) {
@@ -131,7 +169,7 @@ function CreateBlog() {
                                 ? '#dcdde1'
                                 : 'rgb(226, 232, 240)'
                         }}
-                        onChange={(e) => setthumbnail(e.target.files[0])}
+                        onChange={(e) => setThumbnail(e.target.files[0])}
                     />
                 </div>
 

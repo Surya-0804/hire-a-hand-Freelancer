@@ -1,4 +1,5 @@
-import {createContext} from 'react';
+// myContext.jsx
+import { createContext } from 'react';
 
-const myContext = createContext();
-export default myContext;
+const MyContext = createContext();
+export default MyContext;

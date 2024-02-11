@@ -1,18 +1,67 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Layout from '../../../components/layout/Layout';
-import myContext from '../../../context/data/myContext';
+import myContext from '../../../context/data/MyContext';
 import { Button } from '@material-tailwind/react';
 import { Link, useNavigate } from 'react-router-dom';
+import { fireDb, auth } from '../../../firebase/FirebaseConfig'; // Adjust the import path accordingly
 
-function Dashboard() {
+const Dashboard = () => {
+    console.log("Dashboard component rendered");
+
     const context = useContext(myContext);
-    const { mode, getAllBlog,deleteBlogs } = context;
+    const { mode, getAllBlog, deleteBlogs } = context;
     const navigate = useNavigate();
+    let [currentUser, setCurrentUser] = useState(null);
 
     const logout = () => {
         localStorage.clear("admin");
         navigate("/");
     };
+
+
+    const getCurrentUser = () => {
+        return new Promise((resolve, reject) => {
+            const unsubscribe = auth.onAuthStateChanged(user => {
+                unsubscribe();
+                resolve(user);
+            }, error => {
+                reject(error);
+            });
+        });
+    };
+
+    useEffect(() => {
+        const checkCurrentUser = async () => {
+            try {
+                const user = await getCurrentUser();
+                console.log("Effect - Current User:", user);
+
+                if (!user) {
+                    console.log("Redirecting to login from Dashboard useEffect");
+                    navigate('/adminlogin');
+                } else {
+                    setCurrentUser(user);
+                }
+            } catch (error) {
+                console.error("Error fetching current user:", error);
+                // Handle error or redirect to login as needed
+                navigate('/adminlogin');
+            }
+        };
+
+        checkCurrentUser();
+    }, [getCurrentUser, navigate]);
+
+    // Log the length of getAllBlog and currentUser
+    console.log("getAllBlog Length:", getAllBlog.length);
+    console.log("currentUser:", currentUser);
+
+    // Check if currentUser is defined before accessing its properties
+    const filteredBlogs = currentUser
+        ? getAllBlog.filter(blog => blog.userId === currentUser.uid)
+        : [];
+
+    console.log("Filtered Blogs:", filteredBlogs);
 
     return (
         <Layout>
@@ -85,7 +134,6 @@ function Dashboard() {
                     </div>
                 </div>
 
-                {/* Line  */}
                 <hr
                     className={`border-2
                     ${mode === 'dark'
@@ -93,13 +141,10 @@ function Dashboard() {
                         : 'border-gray-400'}`}
                 />
 
-                {/* Table  */}
                 <div className="">
                     <div className='container mx-auto px-4 max-w-7xl my-5'>
                         <div className="relative overflow-x-auto shadow-md sm:rounded-xl">
-                            {/* table  */}
                             <table className="w-full border-2 border-white shadow-md text-sm text-left text-gray-500 dark:text-gray-400">
-                                {/* thead  */}
                                 <thead
                                     style={{
                                         background: mode === 'dark'
@@ -147,12 +192,11 @@ function Dashboard() {
                                     </tr>
                                 </thead>
 
-                                {/* tbody  */}
-                                {getAllBlog.length > 0 ? (
+                                {filteredBlogs.length > 0 ? (
                                     <tbody>
-                                        {getAllBlog.map((item, index) => {
-                                            console.log(item);
-                                            const { thumbnail, date, blogs ,id} = item;
+                                    {filteredBlogs.map((item, index) => {
+                                            console.log("Blog Item:", item);
+                                            const { thumbnail, date, blogs, id } = item;
 
                                             return (
                                                 <tr
@@ -170,39 +214,34 @@ function Dashboard() {
                                                         {index + 1}.
                                                     </td>
 
-                                                    {/* Blog Thumbnail */}
                                                     <th
                                                         style={{ color: mode === 'dark' ? 'white' : 'black' }}
                                                         scope="row"
                                                         className="px-6 py-4 font-medium ">
-                                                        {/* Thumbnail */}
                                                         <img className='w-16 rounded-lg' src={thumbnail} alt="thumbnail" />
                                                     </th>
 
-                                                    {/* Blog Title */}
+                                                    {/* Adjusted rendering logic for Title and Category */}
                                                     <td
                                                         style={{ color: mode === 'dark' ? 'white' : 'black' }}
                                                         className="px-6 py-4">
-                                                        {blogs && blogs.title}
+                                                        {blogs && blogs.title ? blogs.title : "N/A"}
                                                     </td>
 
-                                                    {/* Blog Category */}
                                                     <td
                                                         style={{ color: mode === 'dark' ? 'white' : 'black' }}
                                                         className="px-6 py-4">
-                                                        {blogs && blogs.category}
+                                                        {blogs && blogs.category ? blogs.category : "N/A"}
                                                     </td>
 
-                                                    {/* Blog Date */}
                                                     <td
                                                         style={{ color: mode === 'dark' ? 'white' : 'black' }}
                                                         className="px-6 py-4">
                                                         {date}
                                                     </td>
 
-                                                    {/* Delete Blog */}
                                                     <td
-                                                        onClick={()=>deleteBlogs(id)}
+                                                        onClick={() => deleteBlogs(id)}
                                                         style={{ color: mode === 'dark' ? 'white' : 'black' }}
                                                         className="px-6 py-4">
                                                         <button
