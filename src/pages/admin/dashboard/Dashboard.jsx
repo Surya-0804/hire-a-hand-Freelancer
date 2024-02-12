@@ -1,67 +1,75 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Layout from '../../../components/layout/Layout';
-import myContext from '../../../context/data/MyContext';
+import MyContext from '../../../context/data/MyContext';
 import { Button } from '@material-tailwind/react';
 import { Link, useNavigate } from 'react-router-dom';
-import { fireDb, auth } from '../../../firebase/FirebaseConfig'; // Adjust the import path accordingly
+import { fireDb, auth } from '../../../firebase/FirebaseConfig';
+import { getDoc, doc, query, collection, where,getDocs } from 'firebase/firestore';
 
 const Dashboard = () => {
-    console.log("Dashboard component rendered");
-
-    const context = useContext(myContext);
+    const context = useContext(MyContext);
     const { mode, getAllBlog, deleteBlogs } = context;
     const navigate = useNavigate();
-    let [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [userDetails, setUserDetails] = useState(null);
 
     const logout = () => {
         localStorage.clear("admin");
         navigate("/");
     };
 
-
     const getCurrentUser = () => {
         return new Promise((resolve, reject) => {
-            const unsubscribe = auth.onAuthStateChanged(user => {
-                unsubscribe();
-                resolve(user);
-            }, error => {
-                reject(error);
-            });
+            const unsubscribe = auth.onAuthStateChanged(
+                (user) => {
+                    unsubscribe();
+                    console.log('Current user:', user);
+                    resolve(user);
+                },
+                (error) => {
+                    console.error('Error in onAuthStateChanged:', error);
+                    reject(error);
+                }
+            );
         });
     };
 
-    useEffect(() => {
-        const checkCurrentUser = async () => {
-            try {
-                const user = await getCurrentUser();
-                console.log("Effect - Current User:", user);
+    const getCurrentUserDetails = async (user) => {
+        try {
+            if (user) {
+                const userDetailsQuery = query(collection(fireDb, 'users'), where('uid', '==', user.uid));
+                const userDetailsSnapshot = await getDocs(userDetailsQuery);
 
-                if (!user) {
-                    console.log("Redirecting to login from Dashboard useEffect");
-                    navigate('/adminlogin');
-                } else {
+                if (!userDetailsSnapshot.empty) {
+                    const userDetailsDoc = userDetailsSnapshot.docs[0];
+                    const userDetailsData = userDetailsDoc.data();
                     setCurrentUser(user);
+                    setUserDetails(userDetailsData);
+                } else {
+                    console.log("User details not found");
                 }
-            } catch (error) {
-                console.error("Error fetching current user:", error);
-                // Handle error or redirect to login as needed
+            } else {
+                console.log("Redirecting to login from Dashboard useEffect");
                 navigate('/adminlogin');
             }
+        } catch (error) {
+            console.error("Error fetching current user:", error);
+            navigate('/adminlogin');
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const user = await getCurrentUser();
+            getCurrentUserDetails(user);
         };
 
-        checkCurrentUser();
-    }, [getCurrentUser, navigate]);
+        fetchData();
+    }, [navigate]);
 
-    // Log the length of getAllBlog and currentUser
-    console.log("getAllBlog Length:", getAllBlog.length);
-    console.log("currentUser:", currentUser);
-
-    // Check if currentUser is defined before accessing its properties
     const filteredBlogs = currentUser
         ? getAllBlog.filter(blog => blog.userId === currentUser.uid)
         : [];
-
-    console.log("Filtered Blogs:", filteredBlogs);
 
     return (
         <Layout>
@@ -79,22 +87,22 @@ const Dashboard = () => {
                             className='text-center font-bold text-2xl mb-2'
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
                         >
-                            Kamal Nayan Upadhyay
+                            {userDetails?.companyName || userDetails?.name ||'Company Name'}
                         </h1>
 
                         <h2
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
                             className="font-semibold">
-                            Software Developer
+                            {userDetails?.userType || 'User Type'}
                         </h2>
                         <h2
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
-                            className="font-semibold">knupadhyay784@gmail.com
+                            className="font-semibold">{userDetails?.email || 'Email'}
                         </h2>
                         <h2
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
                             className="font-semibold">
-                            <span>Total Blog : </span>  15
+                            <span>Total Blog : </span>  {filteredBlogs.length}
                         </h2>
                         <div className="flex gap-2 mt-2">
                             <Link to={'/createblog'}>

@@ -13,8 +13,8 @@ import CreateBlog from './pages/admin/createBlog/CreateBlog';
 import BlogInfo from './pages/blogInfo/BlogInfo';
 import AdminLogin from './pages/admin/adminLogin/AdminLogin';
 import Dashboard from './pages/admin/dashboard/Dashboard';
-import MyState from './context/data/MyState';
 import { Toaster } from 'react-hot-toast';
+import MyState from './context/data/myState';
 
 function App() {
     return (

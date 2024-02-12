@@ -64,7 +64,7 @@ export function StickyNavbar() {
         <Typography
           as={Link}
           to="/"
-          className="mr-4 cursor-pointer py-1.5 font-medium"
+          className="mr-4 cursor-pointer py-1.5 font-black text-2xl"
         >
           Hire a Hand
         </Typography>

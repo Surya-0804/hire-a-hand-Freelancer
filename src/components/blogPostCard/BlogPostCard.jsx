@@ -89,6 +89,7 @@ function BlogPostCard() {
           {/* See More Button  */}
           <div className="flex justify-center my-5">
             <Button
+              onClick={()=>navigate('/allblogs')}
               style={{
                 background: mode === 'dark'
                   ? 'rgb(226, 232, 240)'

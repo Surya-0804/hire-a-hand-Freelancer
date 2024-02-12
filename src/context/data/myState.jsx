@@ -72,16 +72,23 @@ function MyState(props) {
     }
 
     // Function to get the current user
-    const getCurrentUser = () => {
-        const auth = getAuth();
-        let currentUser = null;
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const auth = getAuth();
 
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-        });
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe(); // Unsubscribe to prevent memory leaks
 
-        return currentUser;
-    };
+      if (user) {
+        resolve(user);
+      } else {
+        resolve(null);
+      }
+    }, (error) => {
+      reject(error);
+    });
+  });
+};
     const fetchBlogData = async () => {
         try {
             const q = query(

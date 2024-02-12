@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore,doc} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth"; 
 import { getStorage } from "firebase/storage";
 
@@ -45,4 +45,4 @@ onAuthStateChanged(auth, (user) => {
     // Example: setUserState(null);
   }
 });
-export {fireDb,auth,storage};
+export {fireDb,auth,storage,doc};
