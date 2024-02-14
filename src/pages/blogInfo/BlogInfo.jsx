@@ -175,10 +175,13 @@ function BlogInfo() {
             addComment={addComment}
             commentText={commentText}
             setcommentText={setCommentText}
+            setAllComment={setAllComment}
             allComment={allComment}
             fullName={fullName}
             setFullName={setFullName}
+            blogPostId={params.id}
           />
+
 
         </div>
       </section>

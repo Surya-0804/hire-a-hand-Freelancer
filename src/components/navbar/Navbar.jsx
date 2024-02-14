@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar, Collapse, Typography, IconButton, Avatar } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import SearchDialog from "../searchDialog/SearchDialog";
+import logo from "../../../logo.png";
 
 export function StickyNavbar() {
   const [openNav, setOpenNav] = React.useState(false);
@@ -16,14 +17,14 @@ export function StickyNavbar() {
   const admin = localStorage.getItem("admin");
 
   const navList = (
-    <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+    <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 ">
       <Typography
         as="li"
         variant="small"
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="flex items-center text-xl	">
           Home
         </Link>
       </Typography>
@@ -33,7 +34,7 @@ export function StickyNavbar() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <Link to="/allblogs" className="flex items-center">
+        <Link to="/allblogs" className="flex items-center text-xl	">
           Blog
         </Link>
       </Typography>
@@ -43,7 +44,7 @@ export function StickyNavbar() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <Link to="/adminlogin" className="flex items-center">
+        <Link to="/adminlogin" className="flex items-center text-xl	">
           Admin Login
         </Link>
       </Typography>
@@ -64,12 +65,14 @@ export function StickyNavbar() {
         <Typography
           as={Link}
           to="/"
-          className="mr-4 cursor-pointer py-1.5 font-black text-2xl"
+          className="mr-4 cursor-pointer py-1.5 font-black text-4xl di flex"
         >
-          Hire a Hand
+          Hire a Hand 
+         
         </Typography>
         <div className="flex items-center gap-4">
           <div className="mr-4 hidden lg:block">{navList}</div>
+          
           {admin ? <Link to="/dashboard"> {/* Wrap the Avatar with Link */}
             <Avatar
               key={1}

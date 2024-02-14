@@ -1,13 +1,13 @@
 import { Typography } from '@material-tailwind/react'
 import React, { useContext } from 'react'
 import myContext from '../../context/data/MyContext';
-
+import logo from '../../../logo.png';
 function HeroSection() {
     const context = useContext(myContext);
     const { mode } = context;
     return (
         <section
-            style={{ background: mode === 'dark' ? 'rgb(30, 41, 59)' : '#30336b' }}>
+            style={{ background: mode === 'dark' ? 'rgb(30, 41, 59)' : '#031926' }}>
 
             {/* Hero Section  */}
             <div className="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
@@ -17,7 +17,7 @@ function HeroSection() {
                         <div className="mb-2">
                             {/* Image  */}
                             <div className="flex justify-center">
-                                <img src="" alt="" />
+                                <img src={logo} alt="" />
                             </div>
 
                             {/* Text  */}
