@@ -1,0 +1,30 @@
+.error-page {
+    text-align: center;
+    margin-top: 100px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.error-page h1 {
+    font-size: 3rem;
+    color: #ff6347;
+}
+
+.error-page p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.quick-links a {
+    text-decoration: none;
+    color: #007bff;
+    margin: 0 10px;
+}
+
+.quick-links a:hover {
+    text-decoration: underline;
+}

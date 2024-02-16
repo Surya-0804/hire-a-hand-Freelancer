@@ -5,6 +5,7 @@ import { Button } from '@material-tailwind/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fireDb, auth } from '../../../firebase/FirebaseConfig';
 import { getDoc, doc, query, collection, where,getDocs } from 'firebase/firestore';
+import building from "../../../../buildings.png";
 
 const Dashboard = () => {
     const context = useContext(MyContext);
@@ -77,14 +78,14 @@ const Dashboard = () => {
                 <div className="flex flex-wrap justify-start items-center lg:justify-center gap-2 lg:gap-10 px-4 lg:px-0 mb-8">
                     <div className="left">
                         <img
-                            className="w-40 h-40 object-cover rounded-full border-2 border-pink-600 p-1"
-                            src={'https://cdn-icons-png.flaticon.com/128/3135/3135715.png'}
+                            className="w-40 h-40 object-cover rounded-full p-1"
+                            src={building}
                             alt="profile"
                         />
                     </div>
                     <div className="right">
                         <h1
-                            className='text-center font-bold text-2xl mb-2'
+                            className=' font-bold text-4xl mb-2'
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
                         >
                             {userDetails?.companyName || userDetails?.name ||'Company Name'}
@@ -92,16 +93,27 @@ const Dashboard = () => {
 
                         <h2
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
-                            className="font-semibold">
-                            {userDetails?.userType || 'User Type'}
+                            className="text-lg">
+                            <span>User Type : </span>{userDetails?.userType || 'User Type'}
                         </h2>
                         <h2
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
-                            className="font-semibold">{userDetails?.email || 'Email'}
+                            className="text-lg">
+                            <span>Email : </span>{userDetails?.email || 'Email'}
                         </h2>
                         <h2
                             style={{ color: mode === 'dark' ? 'white' : 'black' }}
-                            className="font-semibold">
+                            className="text-lg">
+                            <span>Company ID : </span>{userDetails?.companyId || 'Company ID'}
+                        </h2>
+                        <h2
+                            style={{ color: mode === 'dark' ? 'white' : 'black' }}
+                            className="text-lg">
+                            <span>Company Location : </span>{userDetails?.location || 'Location'}
+                        </h2>
+                        <h2
+                            style={{ color: mode === 'dark' ? 'white' : 'black' }}
+                            className="text-lg">
                             <span>Total Blog : </span>  {filteredBlogs.length}
                         </h2>
                         <div className="flex gap-2 mt-2">
@@ -118,7 +130,7 @@ const Dashboard = () => {
                                         }}
                                         className='px-8 py-2'
                                     >
-                                        Create Blog
+                                        Create Job Posting
                                     </Button>
                                 </div>
                             </Link>

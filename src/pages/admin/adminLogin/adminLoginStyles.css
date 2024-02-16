@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:wght@400;500&family=Protest+Strike&family=Sixtyfour&display=swap');
+.login{
+  background-image: url("img.png");
+  background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+.logintext{
+  text-transform: capitalize;
+  font-size: 50px;
+  font-family: "Kanit", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+input{
+  font-family: "Inconsolata", monospace;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-variation-settings:"wdth" 100;
+}
+.card {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.card-body {
+  margin: 20px;
+  color: #2f102c;
+}
+
+div {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.a {
+  color: #ff6a41;
+}
+
+.a:hover {
+  color: aliceblue;
+}
+
+.form-control {
+  background-color: #fad4bb;
+  /* Add other styles as needed */
+}
+
+.input {
+  font-family: "Inconsolata", monospace;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}

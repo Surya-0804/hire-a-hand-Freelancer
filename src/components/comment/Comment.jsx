@@ -6,7 +6,11 @@ import { fireDb, auth } from '../../firebase/FirebaseConfig';  // Import auth di
 import MyContext from '../../context/data/MyContext';
 import { useNavigate } from 'react-router-dom';
 
-const Comment = ({ setAllComment, allComment, blogPostId }) => {
+const Comment = ({
+  setAllComment,
+  allComment,
+  blogPostId,
+}) => {
   const context = useContext(MyContext);
   const { mode, getAllBlog } = context;
   const navigate = useNavigate();
@@ -95,69 +99,62 @@ const Comment = ({ setAllComment, allComment, blogPostId }) => {
   fetchComments();
 }, [blogPostId]);
 
-  const addComment = async () => {
-    try {
-      setLoading(true);
-  
-      const user = await getCurrentUser();
-  
-      if (!user) {
-        console.error('User not authenticated');
-        return toast.error('Please sign in to add comments.');
-      }
-  
-      // Fetch user details directly from Firestore
-      await getCurrentUserDetails(user);
-  
-      if (!userDetails || !userDetails.name) {
-        console.error('User details not available');
-        return toast.error('User details not available');
-      }
-  
-  
-      if ( !quotePrice || !timeRequired) {
-        console.error('Please fill in all fields');
-        return toast.error('Please fill in all fields');
-      }
-  
-      // const blogPostId = props.blogPostId;
-      console.log(blogPostId);
-  
-      if (!blogPostId) {
-        console.error('Invalid blog post');
-        return toast.error('Invalid blog post');
-      }
-  
-      const commentData = {
-        fullName: userDetails.name,
-        date: new Date().toLocaleString('en-US', {
-          month: 'short',
-          day: '2-digit',
-          year: 'numeric',
-        }),
-        commentText,
-        quotePrice,
-        timeRequired,
-      };
-  
-      const docRef = await addDoc(
-        collection(fireDb, 'blogPost', blogPostId, 'comments'), 
-        commentData
-      );
-      setAllComment((prevComments) => [...prevComments, { id: docRef.id, ...commentData }]);
-  
-      setCommentText('');
-      setQuotePrice('');
-      setTimeRequired('');
-  
-      toast.success('Comment added successfully');
-    } catch (error) {
-      console.error('Error adding comment:', error);
-      toast.error('Error adding comment');
-    } finally {
-      setLoading(false);
+const addComment = async () => {
+  try {
+    setLoading(true);
+
+    const user = await getCurrentUser();
+
+    if (!user) {
+      console.error('User not authenticated');
+      return toast.error('Please sign in to add comments.');
     }
-  };
+
+    // Fetch user details directly from Firestore
+    await getCurrentUserDetails(user);
+
+    if (!userDetails || !userDetails.name) {
+      console.error('User details not available');
+      return toast.error('User details not available');
+    }
+
+    if (!quotePrice || !timeRequired) {
+      console.error('Please fill in all fields');
+      return toast.error('Please fill in all fields');
+    }
+
+    // Remove props prefix from blogPostId
+    const commentData = {
+      uid: user.uid, // Added user UID to the comment data
+      fullName: userDetails.name,
+      date: new Date().toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+      }),
+      quotePrice,
+      timeRequired,
+    };
+
+    const docRef = await addDoc(
+      collection(fireDb, 'blogPost', blogPostId, 'comments'),
+      commentData
+    );
+    setAllComment((prevComments) => [...prevComments, { id: docRef.id, ...commentData }]);
+
+    setQuotePrice('');
+    setTimeRequired('');
+
+    toast.success('Comment added successfully');
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    toast.error('Error adding comment');
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   return (
     <section className="py-8 lg:py-16">
@@ -243,7 +240,7 @@ const Comment = ({ setAllComment, allComment, blogPostId }) => {
                   className="text-gray-500 dark:text-gray-400 text-md"
                   style={{ color: mode === 'dark' ? 'white' : 'black' }}
                 >
-                  ↳ {commentText}
+                  ↳ {/*{commentText}*/}
                   <br />
                   ↠ Quote Price: {quotePrice}
                   <br />

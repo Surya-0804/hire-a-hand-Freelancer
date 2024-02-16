@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inconsolata:wght@200..900&family=Kanit&family=Play:wght@400;700&family=Poppins:wght@400;500&family=Protest+Guerrilla&family=Protest+Strike&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sixtyfour&display=swap');
+
+.footer{
+  display:flex;
+  background:#031926;
+  padding:30px 0px;
+  font-family: 'Play', sans-serif;
+  text-align:center;
+  border-top:1px solid black;
+  width:95%;
+  margin-left: 30px;
+}
+.footerimg{
+  margin-left: 50px;
+  margin-top: 10px;
+  width: 600px;
+  height: auto;
+}
+.footer .row{
+width:100%;
+margin:1% 0%;
+padding:40px;
+padding-top: 15px;
+padding-bottom: 0px;
+color:gray;
+font-size:0.9em;
+font-family: 'Play', sans-serif;
+text-align: left;
+padding-left: 140px;
+}
+.abouthim{
+font-family: 'Play', sans-serif;
+text-align: left;
+color:grey;
+
+
+}
+
+.footer .row a{
+text-decoration:none;
+color:gray;
+transition:0.5s;
+}
+
+.footer .row a:hover{
+color:#fff;
+}
+
+.footer .row ul{
+width:100%;
+}
+
+.footer .row ul li{
+  text-align: left;
+  
+list-style-type: none;
+margin:20px 0;
+
+}
+
+.footer .row a i{
+font-size:2em;
+
+}
+
+@media (max-width:720px){
+.footer{
+text-align:left;
+padding:5%;
+}
+.footer .row ul li{
+display:block;
+margin:10px 0px;
+text-align:left;
+}
+.footer .row a i{
+margin:0% 3%;
+}
+}

@@ -9,9 +9,11 @@ import {
 } from "@material-tailwind/react";
 import myContext from "../../../context/data/MyContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router";
+import { useNavigate ,Link} from "react-router-dom";
 import toast from "react-hot-toast";
-import { auth } from "../../../firebase/FirebaseConfig";
+import { auth, fireDb } from "../../../firebase/FirebaseConfig";
+import "./adminLoginStyles.css"; // Import the CSS file with your styles
+import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
 
 export default function AdminLogin() {
     const context = useContext(myContext);
@@ -20,7 +22,19 @@ export default function AdminLogin() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const linkTag = document.createElement('link');
+    const [isHovered, setIsHovered] = useState(false);
+    const linkStyle={
+        textDecoration: 'none',color: isHovered ? 'aliceblue' : '#435a91',
+      }
+linkTag.rel = 'stylesheet';
+linkTag.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inconsolata:wght@200..900&family=Kanit&family=Play:wght@400;700&family=Poppins:wght@400;500&family=Protest+Guerrilla&family=Protest+Strike&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sixtyfour&family=Smooch+Sans:wght@100..900&display=swap';
 
+document.head.appendChild(linkTag);
+    useEffect(() => {
+        document.body.className = 'login';
+      }, []);
+    
     const login = async () => {
         if (!email || !password) {
             return toast.error("All fields are required");
@@ -28,16 +42,51 @@ export default function AdminLogin() {
     
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
-            toast.success("Login successful");
-            localStorage.setItem("admin", JSON.stringify(result));
-            
-            // Use the navigate function to redirect to the dashboard
-            navigate("/dashboard");
+            const user = result.user;
+    
+            // Retrieve user data from Firebase
+            const db = getFirestore();
+            const usersCollection = collection(db, 'users');
+            const q = query(usersCollection, where('email', '==', email));
+            const querySnapshot = await getDocs(q);
+    
+            let userType = null;
+    
+            querySnapshot.forEach((doc) => {
+                userType = doc.data().userType;
+            });
+    
+            console.log("userType:", userType);
+    
+            // Check userType and redirect accordingly (case-insensitive)
+            if (userType) {
+                toast.success("Login successful");
+    
+                localStorage.setItem("admin", JSON.stringify(result));
+    
+                if (userType.toLowerCase() === "freelancer") {
+                    // Redirect to freelancer dashboard
+                    navigate("/freelancer-dashboard");
+                } else if (userType.toLowerCase() === "company") {
+                    // Redirect to company dashboard
+                    navigate("/dashboard");
+                } else {
+                    console.error("Invalid userType");
+                    toast.error("Login failed");
+                }
+            } else {
+                console.error("UserType not available");
+                toast.error("Login failed");
+            }
         } catch (error) {
             console.error(error);
             toast.error("Login failed");
         }
     };
+    
+    
+    
+    
     useEffect(() => {
         // Check if there's an authenticated user and navigate to the dashboard
         const authenticatedUser = JSON.parse(localStorage.getItem("admin"));
@@ -48,88 +97,79 @@ export default function AdminLogin() {
     }, [navigate]);
 
     return (
-        <div className="flex justify-center items-center h-screen">
-
+        <>
+        <div className="flex flex-col justify-center items-center h-screen Signup">
             {/* Card  */}
             <Card
-                className="w-full max-w-[24rem]"
+                className="card"
                 style={{
-                    background: mode === 'dark'
-                        ? 'rgb(30, 41, 59)'
-                        : 'rgb(226, 232, 240)'
+                    
+                    height: '370px',
+                    width: '400px',
+                    
+                    backgroundColor: 'rgba(255, 255, 255,0.2)',boxShadow: '1px 16px 186px -44px rgba(0,0,0,0.7)', borderRadius:'26px',color:"#162734"
                 }}
             >
-                {/* CardHeader */}
-                <CardHeader
-                    color="blue"
-                    floated={false}
-                    shadow={false}
-                    className="m-0 grid place-items-center rounded-b-none py-8 px-4 text-center"
-                    style={{
-                        background: mode === 'dark'
-                            ? 'rgb(226, 232, 240)'
-                            : 'rgb(30, 41, 59)'
-                    }}
+                {/* Top Heading  */}
+                <Typography
+                    variant="h4"
+                    className="logintext"
+                    style={{textAlign:'center',fontFamily:'Kanit',fontSize:'50px',marginTop:'40px',}}
                 >
-                    <div className="mb-4 rounded-full border border-white/10 bg-white/10 p-2 text-white">
-                        <div className=" flex justify-center">
-                            {/* Image  */}
-                            <img src="https://cdn-icons-png.flaticon.com/128/727/727399.png" className="h-20 w-20"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Top Haeding  */}
-                    <Typography variant="h4" style={{
-                        color: mode === 'dark'
-                            ? 'rgb(30, 41, 59)'
-                            : 'rgb(226, 232, 240)'
-                    }}>
-                        Admin Login
-                    </Typography>
-                </CardHeader>
-
+                    Login
+                </Typography>
                 {/* CardBody */}
-                <CardBody>
-                    <form className=" flex flex-col gap-4">
+                <CardBody className="card-body">
+                    <form className="flex flex-col gap-4">
                         {/* First Input  */}
-                        <div>
+                        <div style={{paddingBottom:'20px'}}>
                             <Input
                                 type="email"
                                 label="Email"
                                 name="email"
                                 value={email}
-                                onChange={(e)=> setEmail(e.target.value)}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="input"
+                                style={{
+                                    backgroundColor: 'rgba(255,255,255,0.5)',
+                                    color: '#2f102c',
+                                }}
                             />
-                        </div>
+                        </div >
                         {/* Second Input  */}
-                        <div>
+                        <div style={{paddingBottom:'20px'}}>
                             <Input
                                 type="password"
                                 label="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                
+                                className="input"
+                                style={{
+                                    backgroundColor: 'rgba(255,255,255,0.7)',
+                                }}
                             />
                         </div>
                         {/* Login Button  */}
                         <Button
                             onClick={login}
+                            className="btn-login"
                             style={{
-                                background: mode === 'dark'
-                                    ? 'rgb(226, 232, 240)'
-                                    : 'rgb(30, 41, 59)',
-                                color: mode === 'dark'
-                                    ? 'rgb(30, 41, 59)'
-                                    : 'rgb(226, 232, 240)'
-                            }}>
+                                backgroundColor: '#2f102c',
+                                border: '0',
+                                fontSize: '16px',
+                            }}
+                        >
                             Login
                         </Button>
                     </form>
                 </CardBody>
             </Card>
+            <div className="w-100 text-center mt-2" style={{color:'rgba(0,2,35,255)'}}>
+        Already have an account? <Link to="/login"  style={linkStyle}  onMouseOver={() => setIsHovered(true)}
+      onMouseOut={() => setIsHovered(false)}>Login</Link>
+      </div>
         </div>
-
-
+        
+      </>
     );
-} 
+}

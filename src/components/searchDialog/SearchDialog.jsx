@@ -23,7 +23,7 @@ export default function SearchDialog({ style }) {
         <Fragment>
             {/* Search Icon */}
             <div onClick={() => { handleOpen(); handleSearch(); }} style={{ cursor: 'pointer', ...style }}>
-                <BiSearchAlt size={20} color="black" />
+                <BiSearchAlt size={25} color="#062c92" />
             </div>
 
             {/* Dialog */}

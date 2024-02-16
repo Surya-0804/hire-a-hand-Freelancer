@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inconsolata:wght@200..900&family=Kanit&family=Poppins:wght@400;500&family=Protest+Guerrilla&family=Protest+Strike&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sixtyfour&display=swap');
+.body{
+    height: 1700px;
+    background-color: #fff;
+    justify-content: center;
+    border-radius: 20px ;
+    border-bottom-left-radius: 0px ;
+    border-bottom-right-radius: 0px;
+    width:95%;
+    margin-left: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid black;
+    
+}
+
+.about{
+    padding: 20px;
+    padding-top:5px;
+    
+    margin:35px;
+    font-size: larger;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal
+}
+.about h1{
+    margin-bottom: 20px;
+    padding-bottom: 25px;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 600;
+    background: -webkit-linear-gradient(0deg, #928a8a 0%, black 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+    font-style: normal;
+  margin-left: 25px;
+  text-transform: uppercase;
+  font-size: 50px;
+}
+.faq{
+    padding: 25px;
+    margin:25px;
+    font-size: larger;
+    font-size: larger;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal
+}
+.faq h1{
+    margin-bottom: 20px;
+    padding-bottom: 25px;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 600;
+    background: -webkit-linear-gradient(0deg, #928a8a 0%, black 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+    font-style: normal;
+  margin-left: 25px;
+  text-transform: uppercase;
+  font-size: 50px;  
+}
+@media screen and (max-width:1050px) {
+    .body{
+        height: 1600px;
+    }
+}
+@media screen and (max-width:850px) {
+    .body{
+        height: 1700px;
+    }
+}
+@media screen and (max-width:650px) {
+    .body{
+        height: 2000px;
+    }
+}

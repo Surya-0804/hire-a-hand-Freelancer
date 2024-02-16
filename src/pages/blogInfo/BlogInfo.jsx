@@ -171,16 +171,15 @@ function BlogInfo() {
             </div>
           }
 
-          <Comment
-            addComment={addComment}
-            commentText={commentText}
-            setcommentText={setCommentText}
-            setAllComment={setAllComment}
-            allComment={allComment}
-            fullName={fullName}
-            setFullName={setFullName}
-            blogPostId={params.id}
-          />
+<Comment
+  addComment={addComment}
+  commentText={commentText}
+  setCommentText={setCommentText}
+  setAllComment={setAllComment}
+  allComment={allComment}
+  blogPostId={params.id}
+/>
+
 
 
         </div>
