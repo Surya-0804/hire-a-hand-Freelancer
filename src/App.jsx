@@ -15,7 +15,7 @@ import AdminLogin from './pages/admin/adminLogin/AdminLogin';
 import Dashboard from './pages/admin/dashboard/Dashboard';
 import { Toaster } from 'react-hot-toast';
 import About from "./pages/home/About"
-import MyState from './context/data/myState';
+import MyState from './context/data/MyState';
 import FreelancerDashboard from './pages/admin/dashboard/FreelancerDashboard';
 
 
