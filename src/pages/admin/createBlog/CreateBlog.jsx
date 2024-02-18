@@ -4,7 +4,7 @@ import AuthContext from '../../../context/data/MyContext'; // Replace with the a
 import React, { useState, useContext } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { BsFillArrowLeftCircleFill } from 'react-icons/bs';
-import myContext from '../../../context/data/myContext';
+import myContext from '../../../context/data/MyContext';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Button,
