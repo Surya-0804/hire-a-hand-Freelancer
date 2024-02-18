@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import myContext from '../../context/data/MyContext';
+import myContext from '../../context/data/myContext';
 import Layout from '../../components/layout/Layout';
 import { useNavigate } from 'react-router-dom';
 
