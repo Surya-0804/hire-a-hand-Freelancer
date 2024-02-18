@@ -165,8 +165,8 @@ document.head.appendChild(linkTag);
                 </CardBody>
             </Card>
             <div className="w-100 text-center mt-2" style={{color:'rgba(0,2,35,255)'}}>
-        Already have an account? <Link to="/login"  style={linkStyle}  onMouseOver={() => setIsHovered(true)}
-      onMouseOut={() => setIsHovered(false)}>Login</Link>
+        Need an account? <Link to="https://hack-a-tron-igqd.vercel.app/signup"  style={linkStyle}  onMouseOver={() => setIsHovered(true)}
+      onMouseOut={() => setIsHovered(false)}>Signup</Link>
       </div>
         </div>
         
