@@ -161,7 +161,7 @@ const addComment = async () => {
       <div className="max-w-2xl mx-auto px-4">
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-lg lg:text-2xl font-bold" style={{ color: mode === 'dark' ? 'white' : 'black' }}>
-            Make Comment
+            Make Bid
           </h2>
         </div>
       <form className="mb-6">
@@ -208,7 +208,7 @@ const addComment = async () => {
               color: mode === 'dark' ? 'rgb(30, 41, 59)' : 'rgb(226, 232, 240)',
             }}
           >
-            Post comment
+            Post Bid
           </Button>
         </div>
       </form>
